@@ -1,4 +1,4 @@
-import * as type from './actions';
+import * as type from './constants';
 
 const initialState = {
     breakLength: 5,
@@ -23,12 +23,14 @@ export const reducer = (state = initialState, action) => {
         case type.SESSION_LENGTH_DOWN:
             return {
                 ...state,
-                sessionLength: state.sessionLength < 2 ? state.sessionLength : state.sessionLength - 1
+                sessionLength: state.sessionLength < 2 ? state.sessionLength : state.sessionLength - 1,
+                timer: new Date(0, 0, 0, 0, state.sessionLength - 1)
             };
         case type.SESSION_LENGTH_UP:
             return {
                 ...state,
-                sessionLength: state.sessionLength + 1
+                sessionLength: state.sessionLength + 1,
+                timer: new Date(0, 0, 0, 0, state.sessionLength + 1)
             };
         case type.TIMER_TICK:
             return {
