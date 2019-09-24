@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux'
-import * as type from './actions';
+import * as type from './constants';
+import { tick } from './actions'
 import { CssBaseline, Box, Grid } from '@material-ui/core';
 import { Layout } from './components/Layout';
 import { MainTitle } from './components/MainTitle';
@@ -26,7 +27,8 @@ function App({ breakLength, sessionLength, isSession, isLaunched, timer, lengthC
 					<Grid container justify='space-between'>
             			<Grid item xs={6}>
                 			<LengthControl 
-								title='Break Length' 
+								title='Break Length'
+								id='break' 
 								level={breakLength} 
 								inc={lengthControl.incBreak} 
 								dec={lengthControl.decBreak} 
@@ -34,7 +36,8 @@ function App({ breakLength, sessionLength, isSession, isLaunched, timer, lengthC
             			</Grid>
             			<Grid item xs={6}>
                 			<LengthControl 
-								title='Session Length' 
+								title='Session Length'
+								id='session' 
 								level={sessionLength} 
 								inc={lengthControl.incSession}
 								dec={lengthControl.decSession}
@@ -72,7 +75,7 @@ const mapDispatchToProps = (dispatch) => {
 			pause: () => dispatch({type: type.TIMER_PAUSE}),
 			reset: () => dispatch({type: type.TIMER_RESET}),
 		},
-		tick: (timer, isLaunched) => dispatch(type.tick(timer, isLaunched))
+		tick: (timer, isLaunched) => dispatch(tick(timer, isLaunched))
 	}
 }
 
