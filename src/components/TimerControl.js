@@ -8,12 +8,12 @@ export const TimerControl = ({ isLaunched, start, pause, reset }) => {
     return (
         <Grid container justify='space-around'>
             <Grid item>
-                <IconButton color='inherit' onClick={isLaunched ? pause : start}>
+                <IconButton id='start_stop' color='inherit' onClick={isLaunched ? pause : start}>
                     {isLaunched ? <PauseCircleOutlineIcon fontSize='large' /> : <PlayCircleOutlineIcon fontSize='large' />}
                 </IconButton>
             </Grid>
             <Grid item>
-                <IconButton color='inherit' onClick={reset}>
+                <IconButton  id='reset' color='inherit' onClick={reset}>
                     <CachedIcon fontSize='large' />
                 </IconButton>
             </Grid>
