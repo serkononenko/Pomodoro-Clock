@@ -14,13 +14,16 @@ const useStyles = makeStyles({
 export const Timer = ({ timer, isSession }) => {
     const classes = useStyles();
 
+    const minutes = timer.getMinutes() < 10 ? `0${timer.getMinutes()}` : timer.getMinutes();
+    const seconds = timer.getSeconds() < 10 ? `0${timer.getSeconds()}` : timer.getSeconds();
+
     return (
         <Box align='center' className={classes.timer}>
             <Typography id='timer-label' variant='h6'>
                 {isSession ? 'Session' : 'Break'}
             </Typography>
             <Typography id='time-left' variant='h2'>
-                {timer}
+                {`${minutes}:${seconds}`}
             </Typography>
         </Box>
     )
