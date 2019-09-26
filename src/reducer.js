@@ -5,7 +5,8 @@ const initialState = {
     sessionLength: 25,
     isSession: true,
     isLaunched: false,
-    timer: new Date(0, 0, 0, 0, 25)
+    timer: new Date(0, 0, 0, 0, 25),
+    breakTimer: new Date(0, 0, 0, 0, 5, 1)
 }
 
 export const reducer = (state = initialState, action) => {
@@ -13,44 +14,62 @@ export const reducer = (state = initialState, action) => {
         case type.BREAK_LENGTH_DOWN:
             return {
                 ...state,
-                breakLength: state.breakLength < 2 ? state.breakLength : state.breakLength - 1
+                breakLength: action.breakLength,
+                breakTimer: action.breakTimer
             };
         case type.BREAK_LENGTH_UP:
             return {
                 ...state,
-                breakLength: state.breakLength + 1
+                breakLength: action.breakLength,
+                breakTimer: action.breakTimer
             };
         case type.SESSION_LENGTH_DOWN:
             return {
                 ...state,
-                sessionLength: state.sessionLength < 2 ? state.sessionLength : state.sessionLength - 1,
-                timer: new Date(0, 0, 0, 0, state.sessionLength - 1)
+                sessionLength: action.sessionLength,
+                timer: action.timer
             };
         case type.SESSION_LENGTH_UP:
             return {
                 ...state,
-                sessionLength: state.sessionLength + 1,
-                timer: new Date(0, 0, 0, 0, state.sessionLength + 1)
+                sessionLength: action.sessionLength,
+                timer: action.timer
             };
-        case type.TIMER_TICK:
+        case type.SESSION_TIMER_TICK:
             return {
                 ...state,
                 timer: action.timer
             };
+        case type.BREAK_TIMER_TICK:
+            return {
+                ...state,
+                isSession: false,
+                breakTimer: action.breakTimer
+            };
+        case type.RESET_SESSION_TIMER:
+            return {
+                ...state,
+                isLaunched: true,
+                isSession: true,
+                timer: action.timer,
+                breakTimer: action.breakTimer
+            }
         case type.TIMER_START:
             return {
                 ...state,
                 isLaunched: true
             };
-        case type.TIMER_PAUSE:
+        case type.TIMER_STOP:
             return {
                 ...state,
                 isLaunched: false
-            }
+            };
         case type.TIMER_RESET:
             return {
                 ...state,
-                ...initialState
+                ...initialState,
+                timer: new Date(0, 0, 0, 0, 25),
+                breakTimer: new Date(0, 0, 0, 0, 5, 1)
             }
         default: return state;
     }
