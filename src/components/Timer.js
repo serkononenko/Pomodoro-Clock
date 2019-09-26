@@ -13,8 +13,8 @@ const useStyles = makeStyles({
 
 export const Timer = ({ timer, isSession }) => {
     const classes = useStyles();
-
-    const minutes = timer.getMinutes() < 10 ? `0${timer.getMinutes()}` : timer.getMinutes();
+    const hour = timer.getHours();
+    const minutes = hour > 0 ? '60' : timer.getMinutes() < 10 ? `0${timer.getMinutes()}` : timer.getMinutes();
     const seconds = timer.getSeconds() < 10 ? `0${timer.getSeconds()}` : timer.getSeconds();
 
     return (
