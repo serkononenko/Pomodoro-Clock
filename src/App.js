@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux'
 import * as type from './constants';
-import { tick } from './actions'
+import { startStop, tick, incrementSession, decrementSession, incrementBreak, decrementBreak } from './actions'
 import { CssBaseline, Box, Grid } from '@material-ui/core';
 import { Layout } from './components/Layout';
 import { MainTitle } from './components/MainTitle';
@@ -9,12 +9,14 @@ import { LengthControl } from './components/LengthControl';
 import { Timer } from './components/Timer';
 import { TimerControl } from './components/TimerControl';
 
-function App({ breakLength, sessionLength, isSession, isLaunched, timer, lengthControl, timerControl, tick }) {
-
+function App({ breakLength, breakTimer, sessionLength, timer, isSession, isLaunched, lengthControl, timerControl, tick }) {
 	useEffect(() => {
-		const interval = setInterval(() => {
-			tick(timer, isLaunched);
-		}, 1000);
+		let interval;
+		if (isLaunched) {
+			interval = setInterval(() => {
+				tick(timer, breakTimer, breakLength, sessionLength);
+			}, 100);
+		}
 		return () => clearInterval(interval);
 	})
 
@@ -31,7 +33,8 @@ function App({ breakLength, sessionLength, isSession, isLaunched, timer, lengthC
 								id='break' 
 								level={breakLength} 
 								inc={lengthControl.incBreak} 
-								dec={lengthControl.decBreak} 
+								dec={lengthControl.decBreak}
+								timer={breakTimer} 
 							/>
             			</Grid>
             			<Grid item xs={6}>
@@ -41,41 +44,42 @@ function App({ breakLength, sessionLength, isSession, isLaunched, timer, lengthC
 								level={sessionLength} 
 								inc={lengthControl.incSession}
 								dec={lengthControl.decSession}
+								timer={timer}
 							/>
             			</Grid>
         			</Grid>
-					<Timer timer={`${timer.getMinutes()}:${timer.getSeconds()}`} isSession={isSession} />
-					<TimerControl isLaunched={isLaunched} start={timerControl.start} pause={timerControl.pause} reset={timerControl.reset} />
+					<Timer timer={isSession ? timer : breakTimer} isSession={isSession} />
+					<TimerControl isLaunched={isLaunched} startStop={timerControl.startStop} reset={timerControl.reset} />
 				</Box>
 			</Layout>
 		</>
 	);
 }
 
-const mapStateToProps = ({ breakLength, sessionLength, timer, isSession, isLaunched }) => {
+const mapStateToProps = ({ breakLength, sessionLength, timer, breakTimer, isSession, isLaunched }) => {
 	return {
 		breakLength,
 		sessionLength,
 		isSession,
 		isLaunched,
-		timer
+		timer,
+		breakTimer
 	}
 }
 
 const mapDispatchToProps = (dispatch) => {
 	return {
 		lengthControl: {
-			incBreak: () => dispatch({type: type.BREAK_LENGTH_UP}),
-			decBreak: () => dispatch({type: type.BREAK_LENGTH_DOWN}),
-			incSession: () => dispatch({type: type.SESSION_LENGTH_UP}),
-			decSession: () => dispatch({type: type.SESSION_LENGTH_DOWN})
+			incBreak: (timer) => dispatch(incrementBreak(timer)),
+			decBreak: (timer) => dispatch(decrementBreak(timer)),
+			incSession: (timer) => dispatch(incrementSession(timer)),
+			decSession: (timer) => dispatch(decrementSession(timer))
 		},
 		timerControl: {
-			start: () => dispatch({type: type.TIMER_START}),
-			pause: () => dispatch({type: type.TIMER_PAUSE}),
+			startStop: (isLaunched) => dispatch(startStop(isLaunched)),
 			reset: () => dispatch({type: type.TIMER_RESET}),
 		},
-		tick: (timer, isLaunched) => dispatch(tick(timer, isLaunched))
+		tick: (timer, breakTimer, breakLength, sessionLength) => dispatch(tick(timer, breakTimer, breakLength, sessionLength))
 	}
 }
 
