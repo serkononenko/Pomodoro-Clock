@@ -5,6 +5,7 @@ const initialState = {
     sessionLength: 25,
     isSession: true,
     isLaunched: false,
+    isPlaying: false,
     timer: new Date(0, 0, 0, 0, 25),
     breakTimer: new Date(0, 0, 0, 0, 5, 1)
 }
@@ -44,6 +45,7 @@ export const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 isSession: false,
+                isPlaying: action.isPlaying,
                 breakTimer: action.breakTimer
             };
         case type.RESET_SESSION_TIMER:
@@ -68,6 +70,7 @@ export const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 ...initialState,
+                isPlaying: false,
                 timer: new Date(0, 0, 0, 0, 25),
                 breakTimer: new Date(0, 0, 0, 0, 5, 1)
             }
