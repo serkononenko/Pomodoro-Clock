@@ -10,6 +10,7 @@ export function startStop(isLaunched) {
 
 export function tick(timer, breakTimer, breakLength, sessionLength) {
     if (breakTimer.getMinutes() === 0 && breakTimer.getSeconds() === 0) {
+
         return {
             type: types.RESET_SESSION_TIMER,
             timer: new Date(0, 0, 0, 0, sessionLength),
@@ -18,9 +19,18 @@ export function tick(timer, breakTimer, breakLength, sessionLength) {
     }
 
     if (timer.getMinutes() === 0 && timer.getSeconds() === 0) {
-        return {
-            type: types.BREAK_TIMER_TICK,
-            breakTimer: new Date(breakTimer - 1000)
+        if (breakTimer.getMinutes() === breakLength) {
+            return {
+                type: types.BREAK_TIMER_TICK,
+                breakTimer: new Date(breakTimer - 1000),
+                isPlaying: true
+            }
+        } else {
+            return {
+                type: types.BREAK_TIMER_TICK,
+                breakTimer: new Date(breakTimer - 1000),
+                isPlaying: false
+            }
         }
     }
     return {
