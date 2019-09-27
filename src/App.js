@@ -9,7 +9,17 @@ import { LengthControl } from './components/LengthControl';
 import { Timer } from './components/Timer';
 import { TimerControl } from './components/TimerControl';
 
-function App({ breakLength, breakTimer, sessionLength, timer, isSession, isLaunched, lengthControl, timerControl, tick }) {
+function App({ breakLength, breakTimer, sessionLength, timer, isSession, isLaunched, isPlaying, lengthControl, timerControl, tick }) {
+	useEffect(() => {
+		const audio = document.querySelector('#beep');
+		if (isPlaying) {
+			audio.play();
+		} else {
+			audio.pause();
+			audio.currentTime = 0;
+		}
+	})
+
 	useEffect(() => {
 		let interval;
 		if (isLaunched) {
@@ -50,18 +60,20 @@ function App({ breakLength, breakTimer, sessionLength, timer, isSession, isLaunc
         			</Grid>
 					<Timer timer={isSession ? timer : breakTimer} isSession={isSession} />
 					<TimerControl isLaunched={isLaunched} startStop={timerControl.startStop} reset={timerControl.reset} />
+					<audio id='beep' src='https://goo.gl/65cBl1'></audio>
 				</Box>
 			</Layout>
 		</>
 	);
 }
 
-const mapStateToProps = ({ breakLength, sessionLength, timer, breakTimer, isSession, isLaunched }) => {
+const mapStateToProps = ({ breakLength, sessionLength, timer, breakTimer, isSession, isLaunched, isPlaying }) => {
 	return {
 		breakLength,
 		sessionLength,
 		isSession,
 		isLaunched,
+		isPlaying,
 		timer,
 		breakTimer
 	}
